@@ -13,6 +13,7 @@ A Fallout-inspired workplace handbook for new IT professionals.
 + Emotional Intelligence
 + ADA Awareness
 + LinkedIn & Networking
+  
 Author
 Josh Rollins
 
