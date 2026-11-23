@@ -5,14 +5,14 @@ Survive the professional wasteland. A retro-inspired guide to personal developme
 A Fallout-inspired workplace handbook for new IT professionals.
 
 # Topics Covered
-Interview Skills
-Workplace Communication
-Team Dynamics
-Time Management
-Conflict Resolution
-Emotional Intelligence
-ADA Awareness
-LinkedIn & Networking
++ Interview Skills
++ Workplace Communication
++ Team Dynamics
++ Time Management
++ Conflict Resolution
++ Emotional Intelligence
++ ADA Awareness
++ LinkedIn & Networking
 Author
 Josh Rollins
 
