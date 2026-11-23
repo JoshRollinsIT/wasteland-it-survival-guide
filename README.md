@@ -1,10 +1,10 @@
 # wasteland-it-survival-guide
 Survive the professional wasteland. A retro-inspired guide to personal development, workplace skills, career planning, and lifelong learning.
-## Vault-Tec Workplace Survival Guide
+## Vault-Tec Wasteland IT Workplace Survival Guide
 ## PDT Capstone Project
 A Fallout-inspired workplace handbook for new IT professionals.
 
-# Topics Covered
+### Topics Covered
 + Interview Skills
 + Workplace Communication
 + Team Dynamics
@@ -14,8 +14,9 @@ A Fallout-inspired workplace handbook for new IT professionals.
 + ADA Awareness
 + LinkedIn & Networking
   
-Author
+### Author
+
 Josh Rollins
 
-Website Goal
+### Website Goal
 Help new IT professionals survive and thrive during their first workplace deployment.
