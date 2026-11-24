@@ -111,6 +111,59 @@ footer {
 }
 
 /* ===================================== */
+/* PERKS Selection  */
+/* ===================================== */
+
+.perk-card {
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+
+}
+
+.perk-card:hover {
+
+    transform: scale(1.02);
+
+    box-shadow:
+        0 0 20px rgba(0,255,102,.4);
+
+}
+
+.perk-selected {
+
+    border: 3px solid #ffcc00 !important;
+
+    box-shadow:
+        0 0 25px rgba(0,255,102,.8);
+
+    background:
+        rgba(0,255,102,.1);
+
+    transform: scale(1.02);
+
+}
+
+.perk-selected::before {
+
+    content:
+    "✔ PERK ACQUIRED";
+
+    display: block;
+
+    color: #00ff66;
+
+    font-weight: bold;
+
+    margin-bottom: 10px;
+
+}
+
+/* ===================================== */
 /* COMMUNICATION PERKS PAGE */
 /* ===================================== */
 
