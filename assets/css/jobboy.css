@@ -1,0 +1,224 @@
+/* ===================================== */
+/* JOB-BOY DEVICE */
+/* ===================================== */
+
+.jobboy {
+
+    width: 1000px;
+    height: 700px;
+
+    margin: 20px auto;
+
+    background: #2b2b2b;
+
+    border: 12px solid #666;
+
+    border-radius: 30px;
+
+    position: relative;
+
+    box-shadow:
+        0 0 50px rgba(0,0,0,.8),
+        inset 0 0 20px rgba(255,255,255,.05);
+
+}
+
+/* ===================================== */
+/* SPEAKER */
+/* ===================================== */
+
+.speaker {
+
+    width: 120px;
+    height: 12px;
+
+    background: #111;
+
+    border-radius: 10px;
+
+    margin: 20px auto;
+
+}
+
+/* ===================================== */
+/* SCREEN */
+/* ===================================== */
+
+.jobboy-screen {
+
+    width: 92%;
+    height: 520px;
+
+    margin: 0 auto;
+
+    background: black;
+
+    border: 4px solid #00ff66;
+
+    border-radius: 15px;
+
+    overflow: hidden;
+
+    color: #00ff66;
+
+    box-shadow:
+        0 0 20px rgba(0,255,102,.35);
+
+    position: relative;
+
+}
+
+/* ===================================== */
+/* JOB-BOY SCREEN IFRAME */
+/* ===================================== */
+
+.jobboy-screen iframe {
+
+    width: 100%;
+    height: 100%;
+
+    border: none;
+
+    background: black;
+
+    display: block;
+}
+
+
+/* CRT Scanlines */
+
+.jobboy-screen::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+    repeating-linear-gradient(
+        transparent,
+        transparent 2px,
+        rgba(0,255,102,.03) 3px
+    );
+}
+
+/* ===================================== */
+/* JOB-BOY TITLE */
+/* ===================================== */
+
+.jobboy-title {
+
+    text-align: center;
+
+    color: #00ff66;
+
+    font-size: 1.4rem;
+
+    margin-bottom: 15px;
+}
+
+/* ===================================== */
+/* TWIST KNOB */
+/* ===================================== */
+
+.twist-container {
+
+    position: absolute;
+
+    top: 220px;
+
+    right: -35px;
+
+}
+
+.twist-knob {
+
+    width: 70px;
+    height: 70px;
+
+    border-radius: 50%;
+
+    position: relative;
+
+    background:
+    repeating-conic-gradient(
+        #888 0deg 12deg,
+        #666 12deg 24deg
+    );
+
+    border: 4px solid #aaa;
+
+    transition: transform .2s ease;
+}
+
+/* ===================================== */
+/* CONTROLS */
+/* ===================================== */
+
+.controls {
+
+    position: absolute;
+
+    bottom: -5px;
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 25px;
+
+}
+
+.controls button {
+
+    width: 140px;
+
+    height: 60px;
+
+    border-radius: 12px;
+
+    border: 2px solid #00ff66;
+
+    background: #111;
+
+    color: #00ff66;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.controls button:hover {
+
+    background: #00ff66;
+
+    color: #000;
+}
+
+/* ===================================== */
+/* MOBILE */
+/* ===================================== */
+
+@media(max-width: 600px){
+
+    .jobboy {
+
+        width: 100%;
+        height: 100vh;
+
+        border-radius: 0;
+    }
+
+    .jobboy-screen {
+
+        height: 72vh;
+    }
+
+}

@@ -1,0 +1,545 @@
+/* ===================================== */
+/* VAULT-TEC COLOR PALETTE */
+/* ===================================== */
+:root {
+    --pipboy-green: #00ff66;
+    --vault-blue: #1f4c99;
+    --dark-bg: #111111;
+    --panel-bg: #181818;
+    --overseer-bg: #00264d;
+    --box-shadow: rgba(0,255,102,.25);
+    --yellow-text: #ffcc00;
+    --green-bg: #003300;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--pipboy-green);
+    text-shadow: 0 0 10px #00ff66;
+}
+
+header {
+    border-bottom: 2px solid var(--pipboy-green);
+}
+
+nav a {
+    background: var(--panel-bg);
+    color: var(--pipboy-green);
+    border: 1px solid var(--pipboy-green);
+}
+
+nav a:hover {
+    background: var(--pipboy-green);
+    color: black;
+}
+
+.button {
+    background: var(--pipboy-green);
+    color: black;
+    font-weight: bold;
+}
+
+footer {
+    border-top: 2px solid var(--pipboy-green);
+}
+
+/* ===================================== */
+/* VAULT-TEC Interview Gauntlet */
+/* ===================================== */
+
+.vault-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.vault-checkbox input {
+    display: none;
+}
+
+.checkmark {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--pipboy-green);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--pipboy-green);
+    font-weight: bold;
+}
+
+.vault-checkbox input:checked + .checkmark::after {
+    content: "X";
+}
+
+.overseer {
+    background-color: var(--overseer-bg);
+    border-left: 5px solid var(--yellow-text);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+}
+
+.overseer h2,
+.overseer h3 {
+    color: var(--yellow-text);
+}
+
+.perk {
+    background-color: var(--panel-bg);
+    border: 2px solid var(--pipboy-green);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0 0 15px var(--box-shadow);
+}
+
+.promotion {
+    text-align: center;
+    background-color: var(--green-bg);
+    border: 3px solid var(--pipboy-green);
+    padding: 25px;
+    margin: 30px 0;
+    border-radius: 10px;
+    box-shadow: 0 0 20px var(--box-shadow);
+}
+
+.promotion h2 {
+    color: var(--yellow-text);
+}
+
+/* ===================================== */
+/* COMMUNICATION PERKS PAGE */
+/* ===================================== */
+
+.perk-card {
+    background-color: #181818;
+    border: 2px solid var(--pipboy-green);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    box-shadow: 0 0 15px var(--box-shadow);
+}
+
+.perk-card h3 {
+    color: var(--yellow-text);
+}
+
+/* ===================================== */
+/* EMAIL EXAMPLES */
+
+.bad-example {
+    border-left: 5px solid #ff4444;
+    background: #220000;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 8px;
+}
+
+.good-example {
+    border-left: 5px solid var(--pipboy-green);
+    background: #002200;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 8px;
+}
+
+/* ===================================== */
+/* COMMUNICATION ACHIEVEMENT */
+
+.promotion {
+    text-align: center;
+    background-color: #003300;
+    border: 3px solid var(--pipboy-green);
+    padding: 25px;
+    margin-top: 35px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px var(--box-shadow);
+}
+
+.promotion h2 {
+    color: var(--yellow-text);
+}
+
+/* ===================================== */
+/* QUEST LOG MANAGEMENT */
+/* ===================================== */
+
+.quest-tier {
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+
+.quest-tier h3 {
+    margin-bottom: 10px;
+}
+
+/* Main Quest */
+
+.critical {
+    border-left: 6px solid #ff4444;
+    background-color: #2a0000;
+}
+
+/* Side Quest */
+
+.important {
+    border-left: 6px solid var(--yellow-text);
+    background-color: #332500;
+}
+
+/* Daily Quest */
+
+.routine {
+    border-left: 6px solid var(--pipboy-green);
+    background-color: #002a00;
+}
+
+/* ===================================== */
+/* SURVIVING THE TEAM */
+/* ===================================== */
+
+.faction-card {
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 6px solid var(--pipboy-green);
+}
+
+.veteran {
+    background-color: #1f1f1f;
+}
+
+.manager {
+    background-color: #1a2433;
+}
+
+.teammate {
+    background-color: #132613;
+}
+
+.team-perk {
+    background-color: #181818;
+    border: 2px solid var(--pipboy-green);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 0 10px var(--box-shadow);
+}
+
+.team-perk h3 {
+    color: var(--yellow-text);
+}
+
+.encounter-box {
+    border-left: 5px solid var(--box-shadow);
+    background-color: #222;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+
+.tip-box {
+    border-left: 5px solid var(--box-shadow);
+    background-color: #1a1a1a;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+
+.tip-box h3 {
+    color: var(--pipboy-green);
+}
+
+/* ===================================== */
+/* CONFLICT ENCOUNTERS */
+/* ===================================== */
+
+.encounter-card {
+    background-color: #181818;
+    border: 2px solid var(--pipboy-green);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.protocol-box {
+    border-left: 5px solid var(--pipboy-green);
+    background-color: #111;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+
+.speech-skill {
+    border: 2px solid var(--pipboy-green);
+    background-color: #151515;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 10px;
+}
+
+.speech-skill h3 {
+    color: var(--yellow-text);
+}
+
+.warning-box {
+    border-left: 5px solid #ff4444;
+    background-color: #2a0000;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+
+.wrong-choice {
+    margin-top: 15px;
+    padding: 15px;
+    border-left: 5px solid #ff4444;
+    background-color: #220000;
+    border-radius: 5px;
+}
+
+.right-choice {
+    margin-top: 15px;
+    padding: 15px;
+    border-left: 5px solid var(--pipboy-green);
+    background-color: #002200;
+    border-radius: 5px;
+}
+
+/* ===================================== */
+/* STATUS EFFECTS */
+/* ===================================== */
+
+.status-card {
+    padding: 20px;
+    margin: 25px 0;
+    border-radius: 10px;
+    border-left: 6px solid var(--pipboy-green);
+}
+
+.burnout {
+    background-color: #2a0000;
+    border-left-color: #ff4444;
+}
+
+.imposter {
+    background-color: #1a1a33;
+    border-left-color: #66ccff;
+}
+
+.frustration {
+    background-color: #332500;
+    border-left-color: var(--yellow-text);
+}
+
+/* ===================================== */
+/* LOCUS OF CONTROL */
+
+.control-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.control-box {
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.can-control {
+    border-left: 5px solid var(--pipboy-green);
+    background-color: #002200;
+}
+
+.cant-control {
+    border-left: 5px solid #ff4444;
+    background-color: #220000;
+}
+
+/* ===================================== */
+/* BUFF CARDS */
+
+.buff-card {
+    background-color: #181818;
+    border: 2px solid var(--pipboy-green);
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px var(--box-shadow);
+}
+
+.buff-card h3 {
+    color: var(--yellow-text);
+}
+
+/* ===================================== */
+/* ADA EMERGENCY KIT */
+/* ===================================== */
+
+.ada-card {
+    background-color: #181818;
+    border-left: 6px solid var(--pipboy-green);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+
+.ada-card h3 {
+    color: var(--pipboy-green);
+}
+
+.decision-box {
+    background-color: #112233;
+    border: 2px solid var(--pipboy-green);
+    padding: 20px;
+    margin: 25px 0;
+    border-radius: 10px;
+}
+
+.myth-card {
+    background-color: #1f1f1f;
+    border-left: 5px solid var(--yellow-text);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+
+.myth-card h3 {
+    color: var(--yellow-text);
+}
+
+/* ===================================== */
+/* DIGITAL REPUTATION DEFENSE */
+/* ===================================== */
+
+.reputation-card {
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+
+.positive {
+    background-color: #002200;
+    border-left: 6px solid var(--pipboy-green);
+}
+
+.negative {
+    background-color: #220000;
+    border-left: 6px solid #ff4444;
+}
+
+/* ===================================== */
+/* LINKEDIN PROFILE BUILDER */
+
+.profile-card {
+    background-color: #1b263b;
+    border: 2px solid var(--pipboy-green);
+    padding: 20px;
+    margin: 25px 0;
+    border-radius: 10px;
+}
+
+.profile-card h3 {
+    color: var(--yellow-text);
+}
+
+/* ===================================== */
+/* NETWORKING PERKS */
+
+.network-card {
+    background-color: #181818;
+    border: 2px solid var(--pipboy-green);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    box-shadow: 0 0 10px var(--box-shadow);
+}
+
+.network-card h3 {
+    color: var(--yellow-text);
+}
+
+/* ===================================== */
+/* REPUTATION AUDIT */
+
+.audit-box {
+    background-color: #111111;
+    border-left: 5px solid var(--pipboy-green);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+
+.audit-box h3 {
+    color: var(--yellow-text);
+}
+
+/* ===================================== */
+/* ENDGAME ADVICE */
+/* ===================================== */
+
+.advice-card {
+    background-color: #181818;
+    border-left: 6px solid var(--pipboy-green);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+
+.advice-card h3 {
+    color: var(--yellow-text);
+}
+
+/* ===================================== */
+/* NEW RECRUIT MISTAKES */
+
+.mistake-card {
+    background-color: #2a0000;
+    border-left: 6px solid #ff4444;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+
+.mistake-card h3 {
+    color: #ff6666;
+}
+
+/* ===================================== */
+/* LEGENDARY PERKS */
+
+.legendary-perk {
+    background-color: #111111;
+    border: 2px solid var(--yellow-text);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(255,204,0,.3);
+}
+
+.legendary-perk h3 {
+    color: var(--yellow-text);
+}
+
+/* ===================================== */
+/* GRADUATION PANEL */
+
+.graduation-panel {
+    text-align: center;
+    background-color: #002244;
+    border: 3px solid var(--pipboy-green);
+    padding: 30px;
+    margin: 40px 0;
+    border-radius: 12px;
+    box-shadow: 0 0 20px var(--box-shadow);
+}
+
+.graduation-panel h2 {
+    color: var(--yellow-text);
+}

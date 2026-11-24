@@ -1,0 +1,1 @@
+console.log("Vault-Tec Survival Guide Loaded");
