@@ -24,6 +24,73 @@ function loadPage(index){
 
     frame.src = pages[index];
 
+    setTimeout(
+        refreshHeaderStats,
+        250
+    );
+
+}
+
+function refreshHeaderStats() {
+
+    const data =
+    JSON.parse(
+        localStorage.getItem(
+            "jobBoyTotals"
+        )
+    );
+
+    if(!data) return;
+
+    const setStat = (id,value) => {
+
+        const element =
+        document.getElementById(id);
+
+        if(element){
+
+            element.textContent =
+            value;
+
+        }
+
+    };
+
+    setStat(
+        "stat-communication",
+        data.communication
+    );
+
+    setStat(
+        "stat-teamwork",
+        data.teamwork
+    );
+
+    setStat(
+        "stat-leadership",
+        data.leadership
+    );
+
+    setStat(
+        "stat-organization",
+        data.organization
+    );
+
+    setStat(
+        "stat-professionalism",
+        data.professionalism
+    );
+
+    setStat(
+        "stat-learning",
+        data.learning
+    );
+
+    setStat(
+        "stat-adaptability",
+        data.adaptability
+    );
+
 }
 
 const knob =
@@ -92,4 +159,10 @@ document
     loadPage(currentPage);
 
 });
+
+loadPage(0);
+
+refreshHeaderStats();
+
+
 

@@ -4,8 +4,8 @@
 
 .jobboy {
 
-    width: 1000px;
-    height: 700px;
+    width: 1100px;
+    height: 800px;
 
     margin: 20px auto;
 
@@ -20,6 +20,77 @@
     box-shadow:
         0 0 50px rgba(0,0,0,.8),
         inset 0 0 20px rgba(255,255,255,.05);
+
+}
+
+/* ===================================== */
+/* JOB-BOY HEADER */
+/* ===================================== */
+
+.jobboy-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 10px;
+
+    margin-bottom: 10px;
+
+}
+
+.jobboy-center {
+
+    text-align: center;
+
+    flex: 1;
+
+}
+
+.stats-left,
+.stats-right {
+
+    width: 120px;
+
+}
+
+.mini-stat {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin: 8px 0;
+
+    padding: 4px 8px;
+
+    border: 1px solid #00ff66;
+
+    background: #111;
+
+    color: #00ff66;
+
+    border-radius: 4px;
+
+    font-size: .8rem;
+
+}
+
+.mini-stat span {
+
+    color: #ffcc00;
+
+    font-weight: bold;
+
+}
+
+.subtitle {
+
+    font-size: .8rem;
+
+    color: #999;
 
 }
 
@@ -47,7 +118,7 @@
 .jobboy-screen {
 
     width: 92%;
-    height: 520px;
+    height: 500px;
 
     margin: 0 auto;
 

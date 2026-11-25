@@ -11,7 +11,7 @@ const PERKS = {
 
     /* Interview */
 
-professionalApprentice: {
+professionalPresence: {
   name: "Professional Presence",
   category: "interview",
   stats: {
@@ -239,10 +239,211 @@ opportunityFinder: {
     adaptability: 2,
     leadership: 2
   }
-}
+},
+
+/* End Game */
+
+expertCommunicator: {
+  name: "Expert Communicator",
+  category: "game",
+  stats: {
+    communication: 3,
+    professional:3,
+    leadership: 1
+  }
+},
+
+teamBuilder: {
+  name: "Team Builder",
+  category: "game",
+  stats: {
+    teamwork: 3,
+    leadership: 3,
+    communication: 1
+  }
+},
+
+adaptableLearner: {
+  name: "Adaptable Learner",
+  category: "game",
+  stats: {
+    learning: 3,
+    adaptability: 3,
+    organization: 1
+  }
+},
+
+resilientSurvivor: {
+  name: "Resilient Survivor",
+  category: "game",
+  stats: {
+    adaptability: 3,
+    professional: 3,
+    teamwork: 1
+  }
+},
 
 
 };
+
+/* ===================================== */
+/* Achievement Database */
+/* ===================================== */
+
+const ACHIEVEMENTS = {
+
+    interview: {
+
+        name: "Professional Apprentice",
+
+        stats: {
+
+            professionalism: 2,
+            communication: 2,
+            learning: 1
+
+        }
+
+    },
+
+    communication: {
+
+        name: "Silver Tongue Technician",
+
+        stats: {
+
+            communication: 3,
+            teamwork: 2,
+            professionalism: 1
+
+        }
+
+    },
+
+    quest: {
+
+        name: "Quest Commander",
+
+        stats: {
+
+            organization: 3,
+            professionalism: 2,
+            leadership: 1
+
+        }
+
+    },
+
+    team: {
+
+        name: "Trusted Team Member",
+
+        stats: {
+
+            teamwork: 3,
+            professionalism: 2,
+            leadership: 1
+
+        }
+
+    },
+
+    conflict: {
+
+        name: "Conflict Resolver",
+
+        stats: {
+
+            leadership: 3,
+            teamwork: 2,
+            communication: 1
+
+        }
+
+    },
+
+    status: {
+
+        name: "Resilient Survivor",
+
+        stats: {
+
+            adaptability: 3,
+            professionalism: 2,
+            learning: 1
+
+        }
+
+    },
+
+    ada: {
+
+        name: "Prepared Survivor",
+
+        stats: {
+
+            professionalism: 3,
+            communication: 2,
+            organization: 1
+
+        }
+
+    },
+
+    reputation: {
+
+        name: "Wasteland Influencer",
+
+        stats: {
+
+            communication: 3,
+            leadership: 2,
+            learning: 1
+
+        }
+
+    },
+
+    endgame: {
+
+        name: "Workplace Survivor",
+
+        stats: {
+
+            adaptability: 3,
+            professionalism: 3,
+            leadership: 2,
+            communication: 2
+
+        }
+
+    }
+
+};
+
+/* ===================================== */
+/* Achievement Claim */
+/* ===================================== */
+
+function claimAchievement(id) {
+
+    const key =
+    "achievement_" + id;
+
+    if(localStorage.getItem(key)){
+
+        return;
+
+    }
+
+    localStorage.setItem(
+        key,
+        "claimed"
+    );
+
+    updateJobBoyStats();
+
+}
 
 /* ===================================== */
 /* Perk Selection */
@@ -299,9 +500,66 @@ document
                 perk
             );
 
+            updateJobBoyStats();
+
         });
 
     });
+
+    /* Achievements */
+
+    document
+.querySelectorAll(".promotion")
+.forEach(card => {
+
+    const achievement =
+
+    card.dataset.achievement;
+
+    const key =
+
+    "achievement_" +
+    achievement;
+
+    if(
+
+        localStorage.getItem(key)
+
+    ){
+
+        card.classList.add(
+            "achievement-claimed"
+        );
+
+    }
+
+    card.addEventListener(
+        "click",
+        () => {
+
+            if(
+
+                !localStorage.getItem(key)
+
+            ){
+
+                localStorage.setItem(
+                    key,
+                    "claimed"
+                );
+
+                card.classList.add(
+                    "achievement-claimed"
+                );
+
+                updateJobBoyStats();
+
+            }
+
+        }
+    );
+
+});
 
 });
 
@@ -311,10 +569,10 @@ document
 
 function selectPerk(category, perkId) {
 
-    localStorage.setItem(
-        category,
-        perkId
-    );
+ localStorage.setItem(
+     category,
+     perkId
+ );
 
     alert(
         PERKS[perkId].name +
@@ -365,46 +623,144 @@ function getSelectedPerks() {
 
 function calculateStats() {
 
-    const character =
-    getSelectedPerks();
-
-    const totals = {
+    const stats = {
 
         communication: 0,
         teamwork: 0,
         leadership: 0,
         organization: 0,
         professionalism: 0,
-        technical: 0,
+        learning: 0,
         adaptability: 0
 
     };
 
-    Object.values(character)
-    .forEach(perkId => {
+    const selectedPerks = [
+
+        localStorage.getItem("interview"),
+        localStorage.getItem("communication"),
+        localStorage.getItem("quest"),
+        localStorage.getItem("team"),
+        localStorage.getItem("conflict"),
+        localStorage.getItem("status"),
+        localStorage.getItem("ada"),
+        localStorage.getItem("reputation")
+
+    ];
+
+    selectedPerks.forEach(perkId => {
 
         if(!perkId) return;
 
-        const perk =
-        PERKS[perkId];
+        const perk = PERKS[perkId];
 
         if(!perk) return;
 
-        Object.entries(
-            perk.stats
-        )
-        .forEach(
-        ([stat, value]) => {
+        Object.entries(perk.stats)
+        .forEach(([stat, value]) => {
 
-            totals[stat] += value;
+            stats[stat] += value;
 
         });
 
     });
 
-    return totals;
+    Object.keys(
+        ACHIEVEMENTS
+    ).forEach(id => {
+
+        if(
+
+            localStorage.getItem(
+                "achievement_" + id
+            )
+
+        ){
+
+            const achievement =
+            ACHIEVEMENTS[id];
+
+            Object.entries(
+                achievement.stats
+            ).forEach(
+            ([stat,value]) => {
+
+                stats[stat] += value;
+
+            });
+
+        }
+
+    });
+
+    return stats;
+}
+
+/* ===================================== */
+/* Update the Job-Boy Display */
+/* ===================================== */
+
+function updateJobBoyStats() {
+
+    const stats =
+    calculateStats();
+
+    const setValue = (id, value) => {
+
+        const element =
+        document.getElementById(id);
+
+        if(element){
+
+            element.textContent =
+            value;
+
+        }
+
+    };
+
+    setValue(
+        "stat-communication",
+        stats.communication
+    );
+
+    setValue(
+        "stat-teamwork",
+        stats.teamwork
+    );
+
+    setValue(
+        "stat-leadership",
+        stats.leadership
+    );
+
+    setValue(
+        "stat-organization",
+        stats.organization
+    );
+
+    setValue(
+        "stat-professionalism",
+        stats.professionalism
+    );
+
+    setValue(
+        "stat-learning",
+        stats.learning
+    );
+
+    setValue(
+        "stat-adaptability",
+        stats.adaptability
+    );
+
+    localStorage.setItem(
+    "jobBoyTotals",
+    JSON.stringify(stats)
+    );
 
 }
+
 
 /* ===================================== */
 /* Career Recommendations */
@@ -436,7 +792,7 @@ function getCareerRecommendations() {
     }
 
     if(
-        stats.technical >= 8 &&
+        stats.learning >= 8 &&
         stats.adaptability >= 6
     ){
         careers.push(
@@ -445,7 +801,7 @@ function getCareerRecommendations() {
     }
 
     if(
-        stats.technical >= 6 &&
+        stats.learning >= 6 &&
         stats.professionalism >= 6
     ){
         careers.push(
@@ -466,3 +822,17 @@ function getCareerRecommendations() {
     return careers;
 
 }
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        updateJobBoyStats();
+
+    }
+);
+
+console.log(
+    calculateStats()
+);
+updateJobBoyStats();
