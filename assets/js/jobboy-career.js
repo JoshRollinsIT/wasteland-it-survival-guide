@@ -245,17 +245,17 @@ opportunityFinder: {
 
 expertCommunicator: {
   name: "Expert Communicator",
-  category: "game",
+  category: "endgame",
   stats: {
     communication: 3,
-    professional:3,
+    professionalism:3,
     leadership: 1
   }
 },
 
 teamBuilder: {
   name: "Team Builder",
-  category: "game",
+  category: "endgame",
   stats: {
     teamwork: 3,
     leadership: 3,
@@ -265,7 +265,7 @@ teamBuilder: {
 
 adaptableLearner: {
   name: "Adaptable Learner",
-  category: "game",
+  category: "endgame",
   stats: {
     learning: 3,
     adaptability: 3,
@@ -275,10 +275,10 @@ adaptableLearner: {
 
 resilientSurvivor: {
   name: "Resilient Survivor",
-  category: "game",
+  category: "endgame",
   stats: {
     adaptability: 3,
-    professional: 3,
+    professionalism: 3,
     teamwork: 1
   }
 },
@@ -441,6 +441,9 @@ function claimAchievement(id) {
         "claimed"
     );
 
+    if (window.JobBoySounds) {
+        JobBoySounds.achievement();
+    }
     updateJobBoyStats();
 
 }
@@ -479,6 +482,9 @@ document
         "click",
         () => {
 
+            const alreadySelected =
+        (localStorage.getItem(category) === perk);
+
             document
             .querySelectorAll(
                 `.perk-card[data-category="${category}"]`
@@ -500,7 +506,12 @@ document
                 perk
             );
 
+            if (!alreadySelected && window.JobBoySounds) {
+                JobBoySounds.perk();
+            }
+
             updateJobBoyStats();
+            updateProgress();
 
         });
 
@@ -548,11 +559,17 @@ document
                     "claimed"
                 );
 
+                if (window.JobBoySounds) {
+                    JobBoySounds.achievement();
+                }
+
                 card.classList.add(
                     "achievement-claimed"
                 );
 
                 updateJobBoyStats();
+
+                updateProgress();
 
             }
 
@@ -564,6 +581,61 @@ document
 });
 
 /* ===================================== */
+/* PROGRESS */
+/* ===================================== */
+
+function updateProgress() {
+
+    let completed = 0;
+
+    const categories = [
+
+        "interview",
+        "communication",
+        "quest",
+        "team",
+        "conflict",
+        "status",
+        "ada",
+        "reputation",
+        "endgame"
+
+    ];
+
+    categories.forEach(category => {
+
+        if(localStorage.getItem(category)){
+
+            completed++;
+
+        }
+
+        if(
+            localStorage.getItem(
+                "achievement_" + category
+            )
+        ){
+
+            completed++;
+
+        }
+
+    });
+
+    const total = 18;
+
+    const percent = Math.round(
+        (completed / total) * 100
+    );
+
+    localStorage.setItem(
+        "jobBoyProgress",
+        percent
+    );
+
+}
+
+/* ===================================== */
 /* Save Selection */
 /* ===================================== */
 
@@ -573,6 +645,9 @@ function selectPerk(category, perkId) {
      category,
      perkId
  );
+    if (window.JobBoySounds) {
+        JobBoySounds.perk();
+    }
 
     alert(
         PERKS[perkId].name +
@@ -611,7 +686,10 @@ function getSelectedPerks() {
             localStorage.getItem("ada"),
 
         reputation:
-            localStorage.getItem("reputation")
+            localStorage.getItem("reputation"),
+
+        endgame:
+            localStorage.getItem("endgame")
 
     };
 
@@ -644,7 +722,8 @@ function calculateStats() {
         localStorage.getItem("conflict"),
         localStorage.getItem("status"),
         localStorage.getItem("ada"),
-        localStorage.getItem("reputation")
+        localStorage.getItem("reputation"),
+        localStorage.getItem("endgame")
 
     ];
 
@@ -836,3 +915,143 @@ console.log(
     calculateStats()
 );
 updateJobBoyStats();
+updateProgress();
+
+/* ============================================================
+   resetJobBoyProgress() — paste at the end of
+   assets/js/jobboy-career.js. There must be ONLY ONE
+   definition of this function in the whole project.
+   Search for "function resetJobBoyProgress" — if you
+   find more than one, delete the older ones.
+
+   v3: the earlier versions failed in practice because
+   they relied on (a) calling the parent's refresh
+   functions and (b) window.top.location.reload().
+   Both can throw / be silently caught (try/catch) and
+   leave only the iframe reloaded, so the parent header
+   and progress bar kept showing old values until a
+   manual refresh. This version does not rely on either:
+
+   1. Clears storage, then WRITES ZERO totals (not removes
+      them) — refreshHeaderStats() in jobboy.js returns
+      early if jobBoyTotals is null, leaving old numbers.
+   2. Zeros the visuals directly, in the parent document
+      AND in this frame, before any reload happens.
+   3. Navigates the top window with a cache-busting URL
+      (?reset=<timestamp>), which forces a fresh load
+      instead of a cached copy of the old JS.
+
+   After saving, do a HARD refresh once (Ctrl+Shift+R /
+   Cmd+Shift+R) so the browser does not keep running a
+   cached copy of jobboy-career.js.
+   ============================================================ */
+
+function resetJobBoyProgress() {
+  if (!confirm("Start a new character? This will clear all perks, achievements, aptitude scores, and training progress.")) {
+    return;
+  }
+
+  const categories = [
+    "interview",
+    "communication",
+    "quest",
+    "team",
+    "conflict",
+    "status",
+    "ada",
+    "reputation",
+    "endgame"
+  ];
+
+  categories.forEach(function (category) {
+    localStorage.removeItem(category);
+    localStorage.removeItem("achievement_" + category);
+  });
+
+  localStorage.removeItem("visitedPages");
+
+  // Write zeros explicitly. Do NOT leave these keys removed:
+  // refreshHeaderStats() returns early on null and leaves
+  // the old numbers on screen.
+  localStorage.setItem(
+    "jobBoyTotals",
+    JSON.stringify({
+      communication: 0,
+      teamwork: 0,
+      leadership: 0,
+      organization: 0,
+      professionalism: 0,
+      learning: 0,
+      adaptability: 0
+    })
+  );
+  localStorage.setItem("jobBoyProgress", "0");
+
+  // Zero the parent visuals directly — do not rely on the
+  // parent's refresh functions, which may throw and be caught.
+  try {
+    const parentDoc = window.parent ? window.parent.document : null;
+    if (parentDoc) {
+      [
+        "stat-communication",
+        "stat-teamwork",
+        "stat-leadership",
+        "stat-organization",
+        "stat-professionalism",
+        "stat-learning",
+        "stat-adaptability"
+      ].forEach(function (id) {
+        const el = parentDoc.getElementById(id);
+        if (el) el.textContent = "0";
+      });
+      const text = parentDoc.getElementById("case-progress");
+      if (text) text.textContent = "0%";
+      const fill = parentDoc.getElementById("progress-fill");
+      if (fill) {
+        fill.style.width = "0%";
+        fill.style.background = "#00ff66";
+      }
+    }
+  } catch (e) { /* cross-origin parent: navigation below still rebuilds it */ }
+
+  // Zero this frame's visuals too.
+  document.querySelectorAll(".perk-selected").forEach(function (el) {
+    el.classList.remove("perk-selected");
+  });
+  document.querySelectorAll(".achievement-claimed").forEach(function (el) {
+    el.classList.remove("achievement-claimed");
+  });
+
+  // Belt and braces: try the parent refresh functions now that
+  // the totals are zeros, so they cannot early-return.
+  try {
+    if (window.parent && typeof window.parent.refreshHeaderStats === "function") {
+      window.parent.refreshHeaderStats();
+    }
+    if (window.parent && typeof window.parent.refreshProgressDisplay === "function") {
+      window.parent.refreshProgressDisplay();
+    }
+  } catch (e) { /* ignore; direct zeroing + navigation below cover it */ }
+
+  // Navigate the whole window, with a cache-busting query so
+  // the browser cannot serve a cached copy of the old JS.
+  // Delayed 100ms so the zeroed visuals paint first.
+  setTimeout(function () {
+    try {
+      const topHref = window.top.location.href.split("?")[0].split("#")[0];
+      window.top.location.href = topHref + "?reset=" + Date.now();
+      return;
+    } catch (e) { /* reading top href threw; try reload instead */ }
+    try {
+      window.top.location.reload();
+      return;
+    } catch (e) { /* fall through */ }
+    try {
+      if (window.parent && typeof window.parent.loadPage === "function") {
+        window.parent.loadPage(0);
+        return;
+      }
+    } catch (e) { /* fall through */ }
+    location.reload();
+  }, 100);
+}

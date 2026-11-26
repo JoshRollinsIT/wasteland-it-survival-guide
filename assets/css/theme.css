@@ -43,6 +43,40 @@ footer {
     border-top: 2px solid var(--pipboy-green);
 }
 
+.info-panel {
+
+    margin: 40px 0;
+
+    padding: 24px;
+
+    border: 2px solid #00ff66;
+
+    border-radius: 10px;
+
+    background:
+        rgba(0,255,102,.05);
+
+}
+
+.hero {
+
+    margin-bottom: 50px;
+
+}
+
+.info-panel h2 {
+
+    margin-bottom: 15px;
+
+}
+
+.info-panel p,
+.info-panel ul {
+
+    margin-bottom: 15px;
+
+}
+
 /* ===================================== */
 /* VAULT-TEC Interview Gauntlet */
 /* ===================================== */

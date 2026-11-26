@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Assessment — Job-Boy 3000</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/theme.css">
+
+    <style>
+        .stat-row { margin: 14px 0; }
+        .stat-row .stat-head { display: flex; justify-content: space-between; font-weight: bold; }
+        .stat-bar { height: 14px; border: 2px solid #00ff66; background: #111; border-radius: 4px; overflow: hidden; margin-top: 4px; }
+        .stat-fill { height: 100%; width: 0; background: #00ff66; transition: width .3s ease; }
+        .career-card { background: #181818; border: 2px solid #00ff66; border-radius: 10px; padding: 20px; margin: 20px 0; }
+        .career-card.top-match { border-color: #ffcc00; box-shadow: 0 0 20px rgba(255,204,0,.35); }
+        .career-card h3 { color: #ffcc00; margin-bottom: 6px; }
+        .career-badge { display: inline-block; font-weight: bold; font-size: .85rem; padding: 3px 10px; border-radius: 20px; border: 1px solid #ffcc00; color: #ffcc00; margin-bottom: 10px; }
+        .career-fit { color: #00ff66; font-weight: bold; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+        .chosen-list li, .achievement-list li { margin-bottom: 8px; }
+        .not-chosen { opacity: .75; }
+    </style>
+</head>
+<body>
+
+<main>
+
+    <section class="hero">
+        <h2>Final Assessment</h2>
+        <p>
+            Your training is tallied below. Every perk you chose and every
+            achievement you claimed added points to your seven workplace
+            aptitudes — and those aptitudes decide which careers fit you best.
+        </p>
+        <p id="progress-summary"></p>
+    </section>
+
+    <section class="info-panel">
+        <h2>Your Aptitude Tally</h2>
+        <p id="total-summary"></p>
+        <div id="stats-tally"></div>
+        <p><small>Bars are scaled to 20 points. A full run through all 9 perks and 9 achievements is 93 points in total.</small></p>
+    </section>
+
+    <section class="info-panel">
+        <h2>What You Chose</h2>
+        <div class="two-col">
+            <div>
+                <h3>Perks Chosen</h3>
+                <ul id="chosen-perks" class="chosen-list"></ul>
+            </div>
+            <div>
+                <h3>Achievements Claimed</h3>
+                <ul id="claimed-achievements" class="achievement-list"></ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="info-panel">
+        <h2>Recommended Career Paths</h2>
+        <p>
+            Ranked by how well your aptitudes fit each role. The top 3 are
+            your strongest matches. A “Strong match” means you met that
+            role’s minimum aptitudes; the rest are ranked so you can see
+            what to build next.
+        </p>
+        <div id="career-recommendations"></div>
+    </section>
+
+    <section class="info-panel">
+        <h2>Start Over?</h2>
+        <p>
+            Want to try a different build and see a different set of
+            recommendations? Resetting clears all perks, achievements,
+            aptitude scores, and training progress.
+        </p>
+        <button class="button" onclick="resetJobBoyProgress()">Start New Character</button>
+    </section>
+
+</main>
+
+<script src="../assets/js/jobboy-career.js"></script>
+<script>
+/* Final Assessment — tally + ranked careers.
+   Recomputes stats here (including "endgame", and mapping the
+   old "professional" typo to "professionalism") so this page is
+   correct even if calculateStats() in jobboy-career.js is older.
+   It reads the same PERKS / ACHIEVEMENTS and the same localStorage
+   keys as the rest of the app. */
+
+const STATS = [
+  { key: "communication", label: "Communication", short: "COM" },
+  { key: "teamwork", label: "Teamwork", short: "TEAM" },
+  { key: "leadership", label: "Leadership", short: "LEAD" },
+  { key: "organization", label: "Organization", short: "ORG" },
+  { key: "professionalism", label: "Professionalism", short: "PROF" },
+  { key: "learning", label: "Learning", short: "LEARN" },
+  { key: "adaptability", label: "Adaptability", short: "ADAPT" }
+];
+
+const CATEGORIES = [
+  { key: "interview", label: "Interview" },
+  { key: "communication", label: "Communication" },
+  { key: "quest", label: "Quest Log" },
+  { key: "team", label: "Team" },
+  { key: "conflict", label: "Conflict" },
+  { key: "status", label: "Status Effects" },
+  { key: "ada", label: "ADA" },
+  { key: "reputation", label: "Digital Reputation" },
+  { key: "endgame", label: "Endgame" }
+];
+
+const CAREERS = [
+  { name: "Help Desk Support Technician", weights: { communication: 3, teamwork: 2, adaptability: 2, professionalism: 1 }, thresholds: [["communication", 8], ["teamwork", 6]], blurb: "Strong communicators who stay calm and helpful while solving user problems." },
+  { name: "Desktop Support Technician", weights: { communication: 3, learning: 2, adaptability: 2, professionalism: 1 }, thresholds: [["communication", 7], ["learning", 6]], blurb: "Hands-on support for the devices and software people use every day." },
+  { name: "IT Installer", weights: { learning: 3, professionalism: 2, organization: 2, adaptability: 1 }, thresholds: [["learning", 6], ["professionalism", 6]], blurb: "Careful, reliable setup of hardware, software, and workstations." },
+  { name: "Field Service Technician", weights: { adaptability: 3, communication: 2, organization: 2, learning: 1 }, thresholds: [["adaptability", 7], ["communication", 6]], blurb: "Independent problem-solving on site, often with little warning." },
+  { name: "Systems Administrator", weights: { organization: 3, learning: 2, professionalism: 2, adaptability: 1 }, thresholds: [["organization", 8], ["learning", 6]], blurb: "Keeps systems organised, documented, and running day to day." },
+  { name: "Network Administrator", weights: { learning: 3, organization: 2, adaptability: 2, professionalism: 1 }, thresholds: [["learning", 7], ["organization", 7]], blurb: "Learns fast and keeps complex networks organised and resilient." },
+  { name: "Information Security Analyst", weights: { learning: 3, adaptability: 2, organization: 2, professionalism: 1 }, thresholds: [["learning", 8], ["adaptability", 6]], blurb: "Constant learning and adaptability to spot and respond to risks." },
+  { name: "Project Manager", weights: { organization: 3, leadership: 3, communication: 2 }, thresholds: [["organization", 8], ["leadership", 6]], blurb: "Organises people, priorities, and communication to land the work." },
+  { name: "IT Manager", weights: { leadership: 3, professionalism: 2, organization: 2, communication: 1 }, thresholds: [["leadership", 8], ["professionalism", 6]], blurb: "Leads a team with professionalism and a clear, organised plan." },
+  { name: "Technical Trainer", weights: { communication: 3, learning: 3, leadership: 1, teamwork: 1 }, thresholds: [["communication", 8], ["learning", 7]], blurb: "Explains technical ideas clearly and keeps learning new ones." },
+  { name: "Business Analyst", weights: { organization: 3, communication: 2, learning: 2, teamwork: 1 }, thresholds: [["organization", 7], ["communication", 7]], blurb: "Turns organised analysis and clear communication into better processes." },
+  { name: "Team Lead", weights: { leadership: 3, teamwork: 3, communication: 2 }, thresholds: [["leadership", 7], ["teamwork", 7]], blurb: "Leads by example, builds trust, and keeps the team communicating." },
+  { name: "Vault Overseer", weights: { communication: 2, leadership: 2, organization: 2, professionalism: 2, teamwork: 1, learning: 1, adaptability: 1 }, thresholds: [["communication", 10], ["leadership", 10], ["organization", 10]], blurb: "The all-rounder: exceptional across communication, leadership, and organisation." }
+];
+
+function normaliseKey(key) {
+  return key === "professional" ? "professionalism" : key;
+}
+
+function addStats(stats, source) {
+  if (!source) return;
+  Object.entries(source).forEach(function (entry) {
+    const key = normaliseKey(entry[0]);
+    if (key in stats) stats[key] += entry[1];
+  });
+}
+
+function computeFinalStats() {
+  const stats = { communication: 0, teamwork: 0, leadership: 0, organization: 0, professionalism: 0, learning: 0, adaptability: 0 };
+  CATEGORIES.forEach(function (cat) {
+    const perkId = localStorage.getItem(cat.key);
+    if (perkId && typeof PERKS !== "undefined" && PERKS[perkId]) {
+      addStats(stats, PERKS[perkId].stats);
+    }
+    if (localStorage.getItem("achievement_" + cat.key) && typeof ACHIEVEMENTS !== "undefined" && ACHIEVEMENTS[cat.key]) {
+      addStats(stats, ACHIEVEMENTS[cat.key].stats);
+    }
+  });
+  return stats;
+}
+
+function formatStatBonus(source) {
+  if (!source) return "";
+  return Object.entries(source).map(function (entry) {
+    const label = STATS.find(function (s) { return s.key === normaliseKey(entry[0]); });
+    return "+" + entry[1] + " " + (label ? label.label : entry[0]);
+  }).join(", ");
+}
+
+function renderFinalAssessment() {
+  const stats = computeFinalStats();
+  const total = Object.values(stats).reduce(function (a, b) { return a + b; }, 0);
+  const storedProgress = parseInt(localStorage.getItem("jobBoyProgress"), 10);
+  const progress = isNaN(storedProgress) ? 0 : storedProgress;
+
+  const progressEl = document.getElementById("progress-summary");
+  if (progressEl) progressEl.textContent = "Training Completion: " + progress + "%  •  Total aptitude points: " + total;
+
+  const totalEl = document.getElementById("total-summary");
+  if (totalEl) totalEl.textContent = total === 0
+    ? "No perks or achievements recorded yet — complete some modules first, then come back here."
+    : "You earned " + total + " aptitude points across " + STATS.length + " aptitudes.";
+
+  const tallyEl = document.getElementById("stats-tally");
+  if (tallyEl) {
+    tallyEl.innerHTML = STATS.map(function (s) {
+      const value = stats[s.key] || 0;
+      const width = Math.min(100, (value / 20) * 100);
+      return '<div class="stat-row"><div class="stat-head"><span>' + s.short + ' — ' + s.label + '</span><span>' + value + '</span></div>' +
+        '<div class="stat-bar"><div class="stat-fill" style="width:' + width + '%"></div></div></div>';
+    }).join("");
+  }
+
+  const perksEl = document.getElementById("chosen-perks");
+  if (perksEl) {
+    perksEl.innerHTML = CATEGORIES.map(function (cat) {
+      const perkId = localStorage.getItem(cat.key);
+      const perk = perkId && typeof PERKS !== "undefined" ? PERKS[perkId] : null;
+      if (!perk) return '<li class="not-chosen"><strong>' + cat.label + ':</strong> Not chosen yet</li>';
+      return '<li><strong>' + cat.label + ':</strong> ' + perk.name + ' (' + formatStatBonus(perk.stats) + ')</li>';
+    }).join("");
+  }
+
+  const achEl = document.getElementById("claimed-achievements");
+  if (achEl) {
+    achEl.innerHTML = CATEGORIES.map(function (cat) {
+      const claimed = !!localStorage.getItem("achievement_" + cat.key);
+      const ach = typeof ACHIEVEMENTS !== "undefined" ? ACHIEVEMENTS[cat.key] : null;
+      if (!ach) return "";
+      if (!claimed) return '<li class="not-chosen"><strong>' + ach.name + ':</strong> Not claimed yet</li>';
+      return '<li><strong>✔ ' + ach.name + ':</strong> ' + formatStatBonus(ach.stats) + '</li>';
+    }).join("");
+  }
+
+  const ranked = CAREERS.map(function (career) {
+    let weighted = 0, weightTotal = 0;
+    Object.entries(career.weights).forEach(function (entry) {
+      weighted += (stats[entry[0]] || 0) * entry[1];
+      weightTotal += entry[1];
+    });
+    const average = weightTotal ? weighted / weightTotal : 0;
+    const thresholdsMet = career.thresholds.every(function (t) { return (stats[t[0]] || 0) >= t[1]; });
+    return { career: career, average: average, weighted: weighted, thresholdsMet: thresholdsMet };
+  }).sort(function (a, b) {
+    if (a.thresholdsMet !== b.thresholdsMet) return a.thresholdsMet ? -1 : 1;
+    if (b.average !== a.average) return b.average - a.average;
+    return b.weighted - a.weighted;
+  });
+
+  const careersEl = document.getElementById("career-recommendations");
+  if (careersEl) {
+    careersEl.innerHTML = ranked.map(function (item, index) {
+      const badge = item.thresholdsMet ? "Strong match"
+        : item.average >= 5 ? "Developing match" : "Explore later";
+      const topStats = Object.entries(item.career.weights)
+        .sort(function (a, b) { return b[1] - a[1]; })
+        .slice(0, 2)
+        .map(function (entry) {
+          const label = STATS.find(function (s) { return s.key === entry[0]; });
+          return (label ? label.label : entry[0]) + " " + (stats[entry[0]] || 0);
+        }).join(" • ");
+      return '<div class="career-card' + (index < 3 ? " top-match" : "") + '">' +
+        '<h3>#' + (index + 1) + ' — ' + item.career.name + '</h3>' +
+        '<span class="career-badge">' + badge + '</span>' +
+        '<p>' + item.career.blurb + '</p>' +
+        '<p class="career-fit">Fit: ' + item.average.toFixed(1) + ' &nbsp;•&nbsp; Key aptitudes: ' + topStats + '</p>' +
+        '</div>';
+    }).join("");
+  }
+}
+
+// Fallback reset, only if jobboy-career.js does not already define it
+// (the home-page button needs the definition in jobboy-career.js itself).
+if (typeof resetJobBoyProgress === "undefined") {
+  window.resetJobBoyProgress = function () {
+    if (!confirm("Start a new character? This will clear all perks, achievements, aptitude scores, and training progress.")) return;
+    CATEGORIES.forEach(function (cat) {
+      localStorage.removeItem(cat.key);
+      localStorage.removeItem("achievement_" + cat.key);
+    });
+    localStorage.removeItem("visitedPages");
+    // Write zeros (do not just remove): refreshHeaderStats()
+    // returns early on null and leaves old numbers on screen.
+    localStorage.setItem("jobBoyTotals", JSON.stringify({ communication: 0, teamwork: 0, leadership: 0, organization: 0, professionalism: 0, learning: 0, adaptability: 0 }));
+    localStorage.setItem("jobBoyProgress", "0");
+    // Zero the parent visuals directly, before any reload.
+    try {
+      const parentDoc = window.parent ? window.parent.document : null;
+      if (parentDoc) {
+        ["stat-communication", "stat-teamwork", "stat-leadership", "stat-organization", "stat-professionalism", "stat-learning", "stat-adaptability"].forEach(function (id) {
+          const el = parentDoc.getElementById(id);
+          if (el) el.textContent = "0";
+        });
+        const text = parentDoc.getElementById("case-progress");
+        if (text) text.textContent = "0%";
+        const fill = parentDoc.getElementById("progress-fill");
+        if (fill) { fill.style.width = "0%"; fill.style.background = "#00ff66"; }
+      }
+    } catch (e) { /* cross-origin parent: navigation below still rebuilds it */ }
+    document.querySelectorAll(".perk-selected, .achievement-claimed").forEach(function (el) {
+      el.classList.remove("perk-selected", "achievement-claimed");
+    });
+    // Navigate the whole window with a cache-busting URL, so a
+    // cached copy of the old JS cannot keep running.
+    setTimeout(function () {
+      try {
+        const topHref = window.top.location.href.split("?")[0].split("#")[0];
+        window.top.location.href = topHref + "?reset=" + Date.now();
+        return;
+      } catch (e) { /* fall through */ }
+      try { window.top.location.reload(); return; } catch (e) { /* fall through */ }
+      try {
+        if (window.parent && window.parent !== window && typeof window.parent.loadPage === "function") {
+          window.parent.loadPage(0);
+          return;
+        }
+      } catch (e) { /* fall through */ }
+      location.reload();
+    }, 100);
+  };
+}
+
+document.addEventListener("DOMContentLoaded", renderFinalAssessment);
+if (document.readyState !== "loading") renderFinalAssessment();
+</script>
+
+<script src="../assets/js/sounds.js"></script>
+</body>
+</html>
